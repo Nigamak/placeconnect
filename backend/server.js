@@ -6,10 +6,13 @@ import authRoutes from "./routes/auth.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 
-dotenv.config();
+dotenv.config({ path: './backend/.env' });
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
 
 // Connect to MongoDB
