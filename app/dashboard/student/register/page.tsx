@@ -17,7 +17,6 @@ export default function RegisterPage() {
     roll_number: "",
     email: "",
     password: "",
-    role: "student",
   })
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -32,7 +31,7 @@ export default function RegisterPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch("http://localhost:5000/api/students/add", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -137,26 +136,10 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
+                  minLength={8}
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500"
                   required
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="role" className="text-slate-300">
-                  Role
-                </Label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="student">Student</option>
-                  <option value="mentor">Mentor</option>
-                  <option value="admin">Admin</option>
-                </select>
               </div>
 
               <Button

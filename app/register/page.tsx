@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { AlertCircle } from "lucide-react"
 
 export default function RegisterPage() {
@@ -17,7 +16,6 @@ export default function RegisterPage() {
     roll_number: "",
     email: "",
     password: "",
-    role: "student",
   })
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -26,17 +24,13 @@ export default function RegisterPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleRoleChange = (value: string) => {
-    setFormData({ ...formData, role: value })
-  }
-
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
     setIsLoading(true)
 
     try {
-      const response = await fetch("http://localhost:5000/api/students/add", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -134,25 +128,10 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
+                  minLength={8}
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500"
                   required
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="role" className="text-slate-300">
-                  Role
-                </Label>
-                <Select value={formData.role} onValueChange={handleRoleChange}>
-                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="mentor">Mentor</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               {error && (

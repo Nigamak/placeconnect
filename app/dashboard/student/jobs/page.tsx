@@ -71,14 +71,20 @@ export default function JobOpeningsPage() {
       setIsLoading(true)
       try {
         const job = jobOpenings.find(j => j.id === jobId)
+        const token = localStorage.getItem("token")
         if (job) {
-          const response = await fetch("http://localhost:5000/api/applications/apply", {
+          if (!token) {
+            alert("Please sign in again before applying.")
+            return
+          }
+
+          const response = await fetch("/api/applications/apply", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({
-              studentId: user.id,
-              name: user.name,
-              email: user.email,
               company: job.company,
               position: job.position,
             }),

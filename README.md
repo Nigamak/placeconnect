@@ -35,15 +35,15 @@ A comprehensive full-stack web application for managing campus placements with A
 ## Tech Stack
 
 - **Frontend**: React, Next.js, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: MongoDB (schema provided)
+- **Backend**: Next.js API routes and an Express API service
+- **Database**: MongoDB Atlas with Mongoose
 - **Charts**: Recharts
 - **UI Components**: shadcn/ui
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js 16+
+- Node.js 20.9+
 - npm or yarn
 
 ### Installation
@@ -57,12 +57,13 @@ cd campus-placement-system
 2. Install dependencies
 \`\`\`bash
 npm install
+npm install --prefix backend
 \`\`\`
 
-3. Set up environment variables
-\`\`\`bash
-cp .env.example .env.local
-\`\`\`
+3. Configure local environment variables:
+   - In the repository root `.env.local`, set `API_URL=http://localhost:5000`.
+   - In `backend/.env`, set `MONGO_URI` and a private `JWT_SECRET`.
+   - Do not commit either environment file.
 
 4. Run the development server
 \`\`\`bash
@@ -71,19 +72,29 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Demo Credentials
+## Deployment
 
-### Student
-- Email: `demo.student@campus.edu`
-- Password: `demo123`
+The Next.js frontend is deployed on Vercel. The Express API in `backend/` must run as a separate web service.
 
-### Mentor
-- Email: `demo.mentor@campus.edu`
-- Password: `demo123`
+### Render API service
 
-### Admin
-- Email: `demo.admin@campus.edu`
-- Password: `demo123`
+Create a Render Web Service from this repository with:
+
+- Root Directory: `backend`
+- Build Command: `npm ci`
+- Start Command: `npm start`
+- Health Check Path: `/healthz`
+- Environment variables:
+  - `MONGO_URI`: the Atlas connection URI, with `placeconnect` as the database name
+  - `JWT_SECRET`: a randomly generated secret; keep it private
+
+Allow the Render service's outbound IP addresses in the Atlas IP Access List. Do not use `0.0.0.0/0` for production.
+
+### Vercel frontend
+
+Set the server-side `API_URL` environment variable to the Render service's public base URL, then redeploy the existing Vercel project. The existing frontend domain remains unchanged.
+
+Public registration creates student accounts only. Mentor and admin accounts must be provisioned by a trusted administrator.
 
 ## Project Structure
 

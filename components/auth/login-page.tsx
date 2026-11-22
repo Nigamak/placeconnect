@@ -24,7 +24,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, role }),
@@ -46,12 +46,6 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handleDemoLogin = (demoRole: string) => {
-    setEmail(`demo.${demoRole}@campus.edu`)
-    setPassword("demo123")
-    setRole(demoRole)
   }
 
   return (
@@ -132,37 +126,17 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            <div className="mt-6 space-y-2">
-              <p className="text-xs text-slate-400 text-center">Demo Accounts:</p>
-              <div className="grid grid-cols-3 gap-2">
-                <Button
+            <div className="mt-6 text-center">
+              <p className="text-sm text-slate-400">
+                New student?{" "}
+                <button
                   type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin("student")}
-                  className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  onClick={() => router.push("/register")}
+                  className="text-blue-400 hover:text-blue-300 underline"
                 >
-                  Student
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin("mentor")}
-                  className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                >
-                  Mentor
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoLogin("admin")}
-                  className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                >
-                  Admin
-                </Button>
-              </div>
+                  Create an account
+                </button>
+              </p>
             </div>
           </CardContent>
         </Card>

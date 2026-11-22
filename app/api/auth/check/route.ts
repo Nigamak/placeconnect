@@ -1,23 +1,24 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
+  const backendUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL
+  if (!backendUrl) {
+    return NextResponse.json({ message: "Authentication backend is not configured" }, { status: 503 })
+  }
+
+  const authorization = request.headers.get("authorization")
+  if (!authorization) {
+    return NextResponse.json({ message: "Authentication required" }, { status: 401 })
+  }
+
   try {
-    const token = request.headers.get("authorization")?.split(" ")[1]
-
-    if (!token) {
-      return NextResponse.json({ user: null }, { status: 401 })
-    }
-
-    const decoded = JSON.parse(Buffer.from(token, "base64").toString())
-
-    return NextResponse.json({
-      user: {
-        id: decoded.id,
-        email: decoded.email,
-        role: decoded.role,
-      },
+    const response = await fetch(`${backendUrl.replace(/\/$/, "")}/api/auth/check`, {
+      headers: { Authorization: authorization },
     })
+    const data = await response.json().catch(() => ({ message: "Authentication backend returned an invalid response" }))
+    return NextResponse.json(data, { status: response.status })
   } catch (error) {
-    return NextResponse.json({ user: null }, { status: 401 })
+    console.error("Authentication check request failed:", error)
+    return NextResponse.json({ message: "Authentication backend is unavailable" }, { status: 502 })
   }
 }
