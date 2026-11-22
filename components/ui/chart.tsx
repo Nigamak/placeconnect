@@ -104,6 +104,9 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
+type TooltipValue = string | number | ReadonlyArray<string | number>
+type TooltipName = string | number
+
 function ChartTooltipContent({
   active,
   payload,
@@ -118,17 +121,8 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+}: RechartsPrimitive.TooltipContentProps<TooltipValue, TooltipName> &
   React.ComponentProps<'div'> & {
-    payload?: Array<{
-      dataKey?: string | number
-      name?: string | number
-      value?: string | number
-      payload?: { fill?: string }
-      color?: string
-    }>
-    active?: boolean
-    label?: string | number
     hideLabel?: boolean
     hideIndicator?: boolean
     indicator?: 'line' | 'dot' | 'dashed'
@@ -195,7 +189,7 @@ function ChartTooltipContent({
 
           return (
             <div
-              key={item.dataKey}
+              key={String(item.dataKey ?? index)}
               className={cn(
                 '[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5',
                 indicator === 'dot' && 'items-center',
